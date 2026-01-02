@@ -1,3 +1,5 @@
+import { form } from "$app/server";
+
 export interface Aksara {
     latin: string;
     jawa: string;
@@ -17,7 +19,7 @@ export const aksaraList: Aksara[] = [
     { latin: "la", jawa: "ꦭ", neptu: 10 },
     { latin: "pa", jawa: "ꦥ", neptu: 11 },
     { latin: "dha", jawa: "ꦝ", neptu: 12 },
-    { latin: "ja", "jawa": "ꦗ", neptu: 13 },
+    { latin: "ja", jawa: "ꦗ", neptu: 13 },
     { latin: "ya", jawa: "ꦪ", neptu: 14 },
     { latin: "ny", jawa: "ꦚ", neptu: 15 },
     { latin: "ma", jawa: "ꦩ", neptu: 16 },
@@ -57,6 +59,7 @@ export const soundRules = [
     { from: "u", to: "ha" },
     { from: "e", to: "ha" },
     { from: "o", to: "ha" },
+    { from: "z", to: "ja" },
 ];
 
 export const hariNeptu: Record<number, number> = {
@@ -79,35 +82,70 @@ export const pasaranNeptu: Record<string, number> = {
 };
 
 export function translateWord(word: string): { result: Aksara[]; total: number } {
-    word = word.toLowerCase();
+    // Basic cleanup: remove everything except lowercase latin letters
+    word = word.toLowerCase().replace(/[^a-z]/g, "");
+
+    // NOTE: Rule skipping double letters removed to satisfy "Alimuddin" requirement (ꦢ꧀ꦢ)
+
     const res: Aksara[] = [];
     let total = 0;
     let i = 0;
 
+    const isVowelChar = (char: string) => ["a", "i", "u", "e", "o"].includes(char);
+
+    // Rule: vokal diawal tidak dihitung jika disandingkan dengan huruf H 
+    // selain itu dihitung sebagai ha (dan tidak semua huruf awal bernilai 0)
+    if (i < word.length && isVowelChar(word[i])) {
+        const nextChar = word[i + 1];
+        if (nextChar === 'h') {
+            // Case "Ahmad": Skip 'A' entirely, processing starts from 'h'
+            i++;
+        } else {
+            // Case "Alimuddin", "Erlang": 'A/E' becomes starting Aksara 'Ha' with full neptu
+            const aksara = aksaraList.find(a => a.latin === "ha");
+            if (aksara) {
+                res.push({ ...aksara });
+                total += aksara.neptu;
+            }
+            i++;
+        }
+    }
+
     while (i < word.length) {
         let matched = false;
+
         for (const rule of soundRules) {
             if (word.startsWith(rule.from, i)) {
-                const isVowel = ["a", "i", "u", "e", "o"].includes(rule.from);
-                if (isVowel) {
-                    const isStart = i === 0;
-                    if (!isStart) {
-                        i += rule.from.length;
-                        matched = true;
-                        break;
-                    }
-                }
-
-                const aksara = aksaraList.find((a) => a.latin === rule.to);
-                if (aksara) {
-                    res.push(aksara);
-                    total += aksara.neptu;
+                // Ignore middle/end vowels for neptu/aksara generation (they are sandhangan)
+                if (isVowelChar(rule.from)) {
                     i += rule.from.length;
                     matched = true;
                     break;
                 }
+
+                // Consonant handling
+                const nextIdx = i + rule.from.length;
+                const hasVowelAfter = nextIdx < word.length && isVowelChar(word[nextIdx]);
+
+                const aksara = aksaraList.find((a) => a.latin === rule.to);
+                if (aksara) {
+                    let neptuValue = aksara.neptu;
+
+                    // Rule: 'n' (sigegan) tidak didampingi vokal bernilai 0
+                    if (!hasVowelAfter && rule.from === "n") {
+                        neptuValue = 0;
+                    }
+
+                    res.push({ ...aksara, neptu: neptuValue });
+                    total += neptuValue;
+                }
+
+                i += rule.from.length;
+                matched = true;
+                break;
             }
         }
+
         if (!matched) {
             i++;
         }
@@ -136,37 +174,75 @@ export function hitungPasaran(date: Date): { pasaran: string; neptu: number } {
     return { pasaran: p, neptu: pasaranNeptu[p] };
 }
 
+export function getSiklus4(value: number) {
+    const idx = ((value - 1) % 4) + 1;
+    const catMap: Record<number, string> = {
+        1: "Gonto",
+        2: "Gembili",
+        3: "Sri",
+        4: "Punggul",
+    };
+    return { idx, label: catMap[idx] };
+}
+
+export function getSiklus5(value: number) {
+    let sisa = value % 5;
+    if (sisa === 0) sisa = 5;
+    const catMap: Record<number, string> = {
+        1: "Sri",
+        2: "Lungguh",
+        3: "Dunya",
+        4: "Lara",
+        5: "Pati",
+    };
+    return { idx: sisa, label: catMap[sisa] };
+}
+
+export function getSiklus7(value: number) {
+    let sisa = value % 7;
+    if (sisa === 0) sisa = 7;
+    const catMap: Record<number, string> = {
+        1: "Wasesa Segara",
+        2: "Tunggak Semi",
+        3: "Satriya Wibawa",
+        4: "Sumur Sinaba",
+        5: "Satriya Wirang",
+        6: "Bumi Kepetak",
+        7: "Lebu Ketiup Angin",
+    };
+    return { idx: sisa, label: catMap[sisa] };
+}
+
+export function getSiklus8(value: number) {
+    let sisa = value % 8;
+    if (sisa === 0) sisa = 8;
+    const catMap: Record<number, string> = {
+        1: "Pegat",
+        2: "Ratu",
+        3: "Jodoh",
+        4: "Topo",
+        5: "Tinari",
+        6: "Padu",
+        7: "Sujanan",
+        8: "Pesthi",
+    };
+    return { idx: sisa, label: catMap[sisa] };
+}
+
 export function hitungKategori(totalNama: number, totalWeton: number) {
-    let sisa = totalNama % totalWeton;
-    if (sisa === 0) sisa = totalWeton;
+    // 1. Individual Insight (modulo 5) for name and weton individually
+    const nameCat = getSiklus5(totalNama);
+    const wetonCat = getSiklus5(totalWeton);
 
-    // Siklus 5
-    const idx5 = ((sisa - 1) % 5) + 1;
-    const cat5Map: Record<number, string> = {
-        1: "Sri (Kemakmuran)",
-        2: "Rejeki (Keberuntungan)",
-        3: "Gedhong (Kemapanan)",
-        4: "Loro (Rintangan)",
-        5: "Pati (Kegagalan)",
-    };
-
-    // Siklus 7 (Only TotalNama % 7)
-    let idx7 = totalNama % 7;
-    if (idx7 === 0) idx7 = 7;
-
-    const cat7Map: Record<number, string> = {
-        1: "Wasesa segara (Pemaaf, pemurah, rezeki luas)",
-        2: "Tunggak semi (Rejeki selalu ada/mengalir)",
-        3: "Satriya wibawa (Mendapat kemuliaan/kebahagiaan)",
-        4: "Sumur seneba (Tempat pengungsian, ilmu melimpah)",
-        5: "Satria wirang (Sering mendapat malu/rintangan)",
-        6: "Bumi kapetak (Tabah, kuat lahir batin)",
-        7: "Lebu katiyub angin (Rejeki cepat habis, sulit cita-cita)",
-    };
-
+    // 2. Combined Results
+    // Siklus 5: Based on Name + Weton per request (nama + weton % 5)
+    // Other cycles (4, 7, 8): Based on Weton neptu for marriage (standard Primbon Jodoh)
     return {
-        sisa,
-        siklus5: { idx: idx5, label: cat5Map[idx5] },
-        siklus7: { idx: idx7, label: cat7Map[idx7] },
+        nameCat,
+        wetonCat,
+        siklus4: getSiklus4(totalWeton),
+        siklus5: getSiklus5(totalNama + totalWeton),
+        siklus7: getSiklus7(totalWeton),
+        siklus8: getSiklus8(totalWeton),
     };
 }

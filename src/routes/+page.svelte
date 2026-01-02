@@ -34,6 +34,7 @@
         const dayName = dayNames[hari];
         const neptuHari = hariNeptu[hari];
         const totalWeton = neptuHari + neptuPas;
+        const individualResult = hitungKategori(totalNama, totalWeton);
 
         return {
             name,
@@ -44,6 +45,7 @@
             neptuHari,
             neptuPas,
             totalWeton,
+            individualResult,
         };
     };
 
@@ -59,26 +61,107 @@
         return hitungKategori(totalNama, totalWeton);
     });
 
-    const siklus5Info = [
+    const siklus4Info = [
+        {
+            name: "Gonto",
+            desc: "Sedikit atau jarang memiliki keturunan dalam rumah tangga.",
+        },
+        {
+            name: "Gembili",
+            desc: "Akan dikaruniai banyak keturunan dalam kehidupan rumah tangganya.",
+        },
         {
             name: "Sri",
-            desc: "Melambangkan kemakmuran dan kelimpahan rezeki dalam hidup.",
+            desc: "Memiliki rezeki yang melimpah dalam kehidupan rumah tangganya.",
         },
         {
-            name: "Rejeki",
-            desc: "Melambangkan keberuntungan yang selalu menyertai setiap langkah.",
+            name: "Punggul",
+            desc: "Bermakna salah satu di antara suami dan istri akan meninggal.",
+        },
+    ];
+
+    const siklus5MarriageInfo = [
+        {
+            name: "Sri",
+            desc: "Memiliki banyak rezeki yang berlimpah dalam rumah tangga.",
         },
         {
-            name: "Gedhong",
-            desc: "Melambangkan kemapanan dan kekayaan harta benda yang stabil.",
+            name: "Lungguh",
+            desc: "Mendapatkan kedudukan, kehormatan, dan derajat yang baik.",
         },
         {
-            name: "Loro",
-            desc: "Melambangkan rintangan atau ujian, baik fisik maupun pikiran.",
+            name: "Dunya",
+            desc: "Dalam kehidupan rumah tangganya akan menjadi kaya raya.",
+        },
+        {
+            name: "Lara",
+            desc: "Mendapat halangan berupa penderitaan atau penyakit dalam rumah tangganya.",
         },
         {
             name: "Pati",
-            desc: "Melambangkan kegagalan atau akhir, pengingat untuk selalu waspada.",
+            desc: "Salah satu pasangan diprediksi akan mengalami kegagalan atau kesulitan besar.",
+        },
+    ];
+
+    const siklus5PersonalInfo = [
+        {
+            name: "Sri",
+            desc: "Anda akan memiliki rezeki yang berlimpah dan keberuntungan hidup.",
+        },
+        {
+            name: "Lungguh",
+            desc: "Anda akan mendapatkan jabatan, kehormatan, dan pengakuan sosial.",
+        },
+        {
+            name: "Dunya",
+            desc: "Anda akan memperoleh materi dan kekayaan yang stabil dalam hidup.",
+        },
+        {
+            name: "Lara",
+            desc: "Anda harus berhati-hati terhadap rintangan kesehatan atau cobaan hidup.",
+        },
+        {
+            name: "Pati",
+            desc: "Anda perlu waspada terhadap tantangan besar atau kegagalan besar dalam hidup.",
+        },
+    ];
+
+    let currentSiklus5Info = $derived(
+        hasPartner ? siklus5MarriageInfo : siklus5PersonalInfo,
+    );
+
+    const siklus8Info = [
+        {
+            name: "Pegat",
+            desc: "Banyak menemui masalah (ekonomi, komunikasi), rawan bercerai.",
+        },
+        {
+            name: "Ratu",
+            desc: "Disegani banyak orang dan kehidupan harmonis membuat iri.",
+        },
+        {
+            name: "Jodoh",
+            desc: "Harmonis, saling menerima, dan langgeng sampai tua.",
+        },
+        {
+            name: "Topo",
+            desc: "Sulit di awal, namun akan membaik setelah memiliki anak.",
+        },
+        {
+            name: "Tinari",
+            desc: "Banyak menemui kesenangan dan keberuntungan rezeki.",
+        },
+        {
+            name: "Padu",
+            desc: "Sering pertengkaran namun tidak sampai bercerai.",
+        },
+        {
+            name: "Sujanan",
+            desc: "Sering bertengkar dan rawan terjadi perselingkuhan.",
+        },
+        {
+            name: "Pesthi",
+            desc: "Damai, rukun, dan tenteram tanpa masalah besar.",
         },
     ];
 
@@ -375,11 +458,13 @@
                                     >
                                     Transliterasi Aksara
                                 </h3>
-                                <div class="space-y-4">
+                                <div class="flex flex-wrap gap-8 items-start">
                                     {#each p1Data.wordDetails as word}
-                                        <div>
+                                        <div
+                                            class="flex items-start gap-4 p-2 rounded-lg bg-base-300/10 border border-white/5"
+                                        >
                                             <div
-                                                class="text-xs opacity-50 mb-1 uppercase tracking-tighter"
+                                                class="text-xs opacity-50 uppercase tracking-tighter mt-2 min-w-[60px]"
                                             >
                                                 {word.word}
                                             </div>
@@ -412,32 +497,50 @@
                         </div>
 
                         <div
-                            class="stats stats-vertical bg-base-200 shadow-xl border-2 border-primary/20 w-full text-sm"
+                            class="grid grid-cols-2 lg:grid-cols-4 gap-4 bg-base-200/50 p-4 rounded-xl border border-primary/20 shadow-sm"
                         >
-                            <div class="stat p-3">
-                                <div class="stat-title text-xs">
-                                    Total Neptu Nama
+                            <div class="text-center">
+                                <div
+                                    class="text-[10px] uppercase opacity-60 font-bold mb-1"
+                                >
+                                    Neptu Nama
                                 </div>
-                                <div class="stat-value text-xl text-primary">
+                                <div class="text-xl text-primary font-bold">
                                     {p1Data.totalNama}
                                 </div>
                             </div>
-                            <div class="stat p-3">
-                                <div class="stat-title text-xs">Weton</div>
-                                <div class="stat-value text-xl">
+                            <div class="text-center border-l border-primary/10">
+                                <div
+                                    class="text-[10px] uppercase opacity-60 font-bold mb-1"
+                                >
+                                    Weton
+                                </div>
+                                <div class="text-sm font-semibold px-1">
                                     {p1Data.dayName}
                                     {p1Data.pasaran}
                                 </div>
                             </div>
-                            <div class="stat p-3">
-                                <div class="stat-title text-xs">
-                                    Total Neptu Weton
+                            <div class="text-center border-l border-primary/10">
+                                <div
+                                    class="text-[10px] uppercase opacity-60 font-bold mb-1"
+                                >
+                                    Neptu Weton
                                 </div>
-                                <div class="stat-value text-xl">
+                                <div class="text-xl font-bold">
                                     {p1Data.totalWeton}
                                 </div>
-                                <div class="stat-desc opacity-40">
+                                <div class="text-[9px] opacity-40 -mt-1">
                                     {p1Data.neptuHari} + {p1Data.neptuPas}
+                                </div>
+                            </div>
+                            <div class="text-center border-l border-primary/10">
+                                <div
+                                    class="text-[10px] uppercase opacity-60 font-bold mb-1"
+                                >
+                                    Aura Nama
+                                </div>
+                                <div class="text-sm text-warning font-black">
+                                    {p1Data.individualResult.nameCat.label}
                                 </div>
                             </div>
                         </div>
@@ -468,11 +571,15 @@
                                         >
                                         Transliterasi Aksara
                                     </h3>
-                                    <div class="space-y-4">
+                                    <div
+                                        class="flex flex-wrap gap-8 items-start"
+                                    >
                                         {#each p2Data.wordDetails as word}
-                                            <div>
+                                            <div
+                                                class="flex items-start gap-4 p-2 rounded-lg bg-base-300/10 border border-white/5"
+                                            >
                                                 <div
-                                                    class="text-xs opacity-50 mb-1 uppercase tracking-tighter"
+                                                    class="text-xs opacity-50 uppercase tracking-tighter mt-2 min-w-[60px]"
                                                 >
                                                     {word.word}
                                                 </div>
@@ -505,46 +612,62 @@
                             </div>
 
                             <div
-                                class="stats stats-vertical bg-base-200 shadow-xl border-2 border-secondary/20 w-full text-sm"
+                                class="grid grid-cols-2 lg:grid-cols-4 gap-4 bg-base-200/50 p-4 rounded-xl border border-secondary/20 shadow-sm"
                             >
-                                <div class="stat p-3">
-                                    <div class="stat-title text-xs">
-                                        Total Neptu Nama
+                                <div class="text-center">
+                                    <div
+                                        class="text-[10px] uppercase opacity-60 font-bold mb-1"
+                                    >
+                                        Neptu Nama
                                     </div>
                                     <div
-                                        class="stat-value text-xl text-secondary"
+                                        class="text-xl text-secondary font-bold"
                                     >
                                         {p2Data.totalNama}
                                     </div>
                                 </div>
-                                <div class="stat p-3">
-                                    <div class="stat-title text-xs">Weton</div>
-                                    <div class="stat-value text-xl">
+                                <div
+                                    class="text-center border-l border-secondary/10"
+                                >
+                                    <div
+                                        class="text-[10px] uppercase opacity-60 font-bold mb-1"
+                                    >
+                                        Weton
+                                    </div>
+                                    <div class="text-sm font-semibold px-1">
                                         {p2Data.dayName}
                                         {p2Data.pasaran}
                                     </div>
                                 </div>
-                                <div class="stat p-3">
-                                    <div class="stat-title text-xs">
-                                        Total Neptu Weton
+                                <div
+                                    class="text-center border-l border-secondary/10"
+                                >
+                                    <div
+                                        class="text-[10px] uppercase opacity-60 font-bold mb-1"
+                                    >
+                                        Neptu Weton
                                     </div>
-                                    <div class="stat-value text-xl">
+                                    <div class="text-xl font-bold">
                                         {p2Data.totalWeton}
                                     </div>
-                                    <div class="stat-desc opacity-40">
+                                    <div class="text-[9px] opacity-40 -mt-1">
                                         {p2Data.neptuHari} + {p2Data.neptuPas}
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    {:else}
-                        <div
-                            class="hidden md:flex items-center justify-center opacity-10"
-                        >
-                            <div
-                                class="text-8xl italic font-serif opacity-10 uppercase -rotate-12"
-                            >
-                                Weton
+                                <div
+                                    class="text-center border-l border-secondary/10"
+                                >
+                                    <div
+                                        class="text-[10px] uppercase opacity-60 font-bold mb-1"
+                                    >
+                                        Aura Nama
+                                    </div>
+                                    <div
+                                        class="text-sm text-warning font-black"
+                                    >
+                                        {p2Data.individualResult.nameCat.label}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     {/if}
@@ -555,16 +678,6 @@
                     <div
                         class="card bg-primary text-primary-content shadow-2xl relative overflow-hidden card-premium"
                     >
-                        <div
-                            class="absolute -right-12 -top-12 opacity-10 text-[10rem] font-serif italic pointer-events-none"
-                        >
-                            Primbon
-                        </div>
-                        <div
-                            class="absolute top-4 left-4 opacity-5 text-9xl pointer-events-none"
-                        >
-                            ꦥꦿꦶꦩ꧀ꦧꦺꦴꦤ꧀
-                        </div>
                         <div class="card-body">
                             <h2
                                 class="card-title uppercase tracking-[0.2em] text-sm opacity-80 mb-4"
@@ -574,54 +687,107 @@
                                     : "Pribadi"}
                             </h2>
 
-                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                <div class="glass-javanese p-6 rounded-box">
+                            <div
+                                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+                            >
+                                <!-- Siklus 5 -->
+                                <div
+                                    class="glass-javanese p-4 rounded-box border border-white/5"
+                                >
                                     <div
-                                        class="text-xs uppercase opacity-70 mb-1"
+                                        class="text-[10px] uppercase opacity-60 mb-1"
                                     >
-                                        Siklus 5 (Aura Hidup)
+                                        Siklus 5
                                     </div>
                                     <div
-                                        class="text-3xl font-bold mb-2 text-warning"
+                                        class="text-xl font-bold text-warning mb-1"
                                     >
                                         {combinedResult.siklus5.label}
                                     </div>
                                     <div
-                                        class="text-xs font-mono opacity-50 space-y-1"
+                                        class="text-[9px] font-mono opacity-50"
                                     >
-                                        <div>
-                                            Rumus: (N1 + N2) % W12 = Sisa {combinedResult.sisa}
-                                        </div>
-                                        <div class="text-[10px] opacity-70">
-                                            ({p1Data.totalNama} + {p2Data?.totalNama ??
-                                                0}) % ({p1Data.totalWeton} + {p2Data?.totalWeton ??
-                                                0})
-                                        </div>
+                                        (N12 + W12) % 5 = {combinedResult
+                                            .siklus5.idx}
                                     </div>
                                 </div>
 
-                                <div class="glass-javanese p-6 rounded-box">
-                                    <div class="text-xs uppercase mb-2">
-                                        Siklus 7 (Nasib Perjalanan)
-                                    </div>
+                                {#if hasPartner}
+                                    <!-- Siklus 4 -->
                                     <div
-                                        class="text-base font-bold mb-2 text-primary"
+                                        class="glass-javanese p-4 rounded-box border border-white/5"
                                     >
-                                        {combinedResult.siklus7.label}
+                                        <div
+                                            class="text-[10px] uppercase opacity-60 mb-1"
+                                        >
+                                            Siklus 4
+                                        </div>
+                                        <div
+                                            class="text-xl font-bold text-secondary mb-1"
+                                        >
+                                            {combinedResult.siklus4.label}
+                                        </div>
+                                        <div
+                                            class="text-[9px] font-mono opacity-50"
+                                        >
+                                            W12 % 4 = {combinedResult.siklus4
+                                                .idx}
+                                        </div>
                                     </div>
+
+                                    <!-- Siklus 7 -->
                                     <div
-                                        class="text-xs font-mono opacity-50 space-y-1"
+                                        class="glass-javanese p-4 rounded-box border border-white/5"
                                     >
-                                        <div>
-                                            Rumus: (N1 + N2) % 7 = Sisa {combinedResult
-                                                .siklus7.idx}
+                                        <div
+                                            class="text-[10px] uppercase opacity-60 mb-1"
+                                        >
+                                            Siklus 7
                                         </div>
-                                        <div class="text-[10px] opacity-70">
-                                            ({p1Data.totalNama} + {p2Data?.totalNama ??
-                                                0}) % 7
+                                        <div
+                                            class="text-xl font-bold text-primary mb-1"
+                                        >
+                                            {combinedResult.siklus7.label}
+                                        </div>
+                                        <div
+                                            class="text-[9px] font-mono opacity-50"
+                                        >
+                                            W12 % 7 = {combinedResult.siklus7
+                                                .idx}
                                         </div>
                                     </div>
-                                </div>
+
+                                    <!-- Siklus 8 -->
+                                    <div
+                                        class="glass-javanese p-4 rounded-box border border-white/5"
+                                    >
+                                        <div
+                                            class="text-[10px] uppercase opacity-60 mb-1"
+                                        >
+                                            Siklus 8
+                                        </div>
+                                        <div
+                                            class="text-xl font-bold text-accent mb-1"
+                                        >
+                                            {combinedResult.siklus8.label}
+                                        </div>
+                                        <div
+                                            class="text-[9px] font-mono opacity-50"
+                                        >
+                                            W12 % 8 = {combinedResult.siklus8
+                                                .idx}
+                                        </div>
+                                    </div>
+                                {/if}
+                            </div>
+
+                            <div
+                                class="mt-4 text-[10px] opacity-40 text-center font-mono italic"
+                            >
+                                *W12: {hasPartner ? "Gabungan" : "Total"} Neptu Weton
+                                {hasPartner ? "Pasangan" : ""} ({p1Data.totalWeton}
+                                {hasPartner ? " + " + p2Data?.totalWeton : ""} =
+                                {p1Data.totalWeton + (p2Data?.totalWeton ?? 0)})
                             </div>
                         </div>
                     </div>
@@ -642,64 +808,132 @@
                     </p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
+                <div
+                    class="grid grid-cols-1 {hasPartner
+                        ? 'md:grid-cols-2 lg:grid-cols-4'
+                        : 'max-w-md mx-auto'} gap-6 mb-20 px-2 lg:px-0"
+                >
+                    {#if hasPartner}
+                        <!-- Card Siklus 4 -->
+                        <div
+                            class="card bg-base-300 shadow-xl border border-white/5 card-premium"
+                        >
+                            <div class="card-body p-5">
+                                <h3
+                                    class="text-secondary font-bold uppercase tracking-widest text-[10px] mb-3"
+                                >
+                                    Siklus 4 (Keturunan)
+                                </h3>
+                                <div class="space-y-3">
+                                    {#each siklus4Info as item}
+                                        <div class="flex flex-col">
+                                            <div
+                                                class="text-xs font-bold text-secondary"
+                                            >
+                                                {item.name}
+                                            </div>
+                                            <div
+                                                class="text-[10px] opacity-50 leading-tight"
+                                            >
+                                                {item.desc}
+                                            </div>
+                                        </div>
+                                    {/each}
+                                </div>
+                            </div>
+                        </div>
+                    {/if}
+
+                    <!-- Card Siklus 5 -->
                     <div
-                        class="card bg-base-300 shadow-2xl border-2 border-primary/20 card-premium"
+                        class="card bg-base-300 shadow-xl border border-white/5 card-premium"
                     >
-                        <div class="card-body">
+                        <div class="card-body p-5">
                             <h3
-                                class="text-primary font-bold uppercase tracking-widest text-sm mb-4"
+                                class="text-warning font-bold uppercase tracking-widest text-[10px] mb-3"
                             >
-                                Siklus 5: Aura Hidup
+                                Siklus 5 (Aura Hidup)
                             </h3>
-                            <div class="space-y-4">
-                                {#each siklus5Info as item}
-                                    <div class="flex gap-4">
+                            <div class="space-y-3">
+                                {#each currentSiklus5Info as item}
+                                    <div class="flex flex-col">
                                         <div
-                                            class="font-bold text-warning min-w-[70px]"
+                                            class="text-xs font-bold text-warning"
                                         >
                                             {item.name}
                                         </div>
                                         <div
-                                            class="text-xs opacity-60 leading-relaxed"
+                                            class="text-[10px] opacity-50 leading-tight"
                                         >
                                             {item.desc}
                                         </div>
                                     </div>
-                                    <div class="divider m-0 opacity-5"></div>
                                 {/each}
                             </div>
                         </div>
                     </div>
 
-                    <div
-                        class="card bg-base-300 shadow-2xl border-2 border-secondary/20 card-premium"
-                    >
-                        <div class="card-body">
-                            <h3
-                                class="text-primary font-bold uppercase tracking-widest text-sm mb-4"
-                            >
-                                Siklus 7: Nasib Perjalanan
-                            </h3>
-                            <div class="space-y-4">
-                                {#each siklus7Info as item}
-                                    <div class="flex gap-4">
-                                        <div
-                                            class="font-bold text-white min-w-[120px] text-xs uppercase tracking-tighter"
-                                        >
-                                            {item.name}
+                    {#if hasPartner}
+                        <!-- Card Siklus 7 -->
+                        <div
+                            class="card bg-base-300 shadow-xl border border-white/5 card-premium"
+                        >
+                            <div class="card-body p-5">
+                                <h3
+                                    class="text-primary font-bold uppercase tracking-widest text-[10px] mb-3"
+                                >
+                                    Siklus 7 (Kesejahteraan)
+                                </h3>
+                                <div class="space-y-3">
+                                    {#each siklus7Info as item}
+                                        <div class="flex flex-col">
+                                            <div
+                                                class="text-xs font-bold text-primary"
+                                            >
+                                                {item.name}
+                                            </div>
+                                            <div
+                                                class="text-[10px] opacity-50 leading-tight"
+                                            >
+                                                {item.desc}
+                                            </div>
                                         </div>
-                                        <div
-                                            class="text-xs opacity-60 leading-relaxed"
-                                        >
-                                            {item.desc}
-                                        </div>
-                                    </div>
-                                    <div class="divider m-0 opacity-5"></div>
-                                {/each}
+                                    {/each}
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    {/if}
+
+                    {#if hasPartner}
+                        <!-- Card Siklus 8 -->
+                        <div
+                            class="card bg-base-300 shadow-xl border border-white/5 card-premium"
+                        >
+                            <div class="card-body p-5">
+                                <h3
+                                    class="text-accent font-bold uppercase tracking-widest text-[10px] mb-3"
+                                >
+                                    Siklus 8 (Keharmonisan)
+                                </h3>
+                                <div class="space-y-2">
+                                    {#each siklus8Info as item}
+                                        <div class="flex flex-col">
+                                            <div
+                                                class="text-[11px] font-bold text-accent"
+                                            >
+                                                {item.name}
+                                            </div>
+                                            <div
+                                                class="text-[10px] opacity-50 leading-tight"
+                                            >
+                                                {item.desc}
+                                            </div>
+                                        </div>
+                                    {/each}
+                                </div>
+                            </div>
+                        </div>
+                    {/if}
                 </div>
             </div>
         {/if}
