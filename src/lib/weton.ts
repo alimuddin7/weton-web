@@ -150,9 +150,8 @@ export function hitungKategori(totalNama: number, totalWeton: number) {
         5: "Pati (Kegagalan)",
     };
 
-    // Siklus 7 (TotalNama + TotalWeton) % 7
-    const sumTotal = totalNama + totalWeton;
-    let idx7 = sumTotal % 7;
+    // Siklus 7 (Only TotalNama % 7)
+    let idx7 = totalNama % 7;
     if (idx7 === 0) idx7 = 7;
 
     const cat7Map: Record<number, string> = {
@@ -169,6 +168,5 @@ export function hitungKategori(totalNama: number, totalWeton: number) {
         sisa,
         siklus5: { idx: idx5, label: cat5Map[idx5] },
         siklus7: { idx: idx7, label: cat7Map[idx7] },
-        sumTotal
     };
 }

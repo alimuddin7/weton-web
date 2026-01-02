@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="wayangGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d4af37;stop-opacity:0.8" />
+      <stop offset="50%" style="stop-color:#c1440e;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#8b6e3d;stop-opacity:0.9" />
+    </linearGradient>
+    <pattern id="batikPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#d4af37" opacity="0.3"/>
+      <circle cx="12" cy="12" r="0.8" fill="#8b6e3d" opacity="0.2"/>
+    </pattern>
+  </defs>
+  
+  <!-- Decorative wayang-inspired ornament -->
+  <g transform="translate(100, 100)">
+    <!-- Central ornament -->
+    <circle cx="0" cy="0" r="40" fill="url(#wayangGold)" opacity="0.3"/>
+    <circle cx="0" cy="0" r="30" fill="none" stroke="#d4af37" stroke-width="2" opacity="0.5"/>
+    <circle cx="0" cy="0" r="20" fill="url(#batikPattern)"/>
+    
+    <!-- Four corner decorations -->
+    <g transform="rotate(0)">
+      <path d="M 0,-50 Q 10,-60 20,-50 Q 10,-40 0,-50" fill="#d4af37" opacity="0.4"/>
+    </g>
+    <g transform="rotate(90)">
+      <path d="M 0,-50 Q 10,-60 20,-50 Q 10,-40 0,-50" fill="#d4af37" opacity="0.4"/>
+    </g>
+    <g transform="rotate(180)">
+      <path d="M 0,-50 Q 10,-60 20,-50 Q 10,-40 0,-50" fill="#d4af37" opacity="0.4"/>
+    </g>
+    <g transform="rotate(270)">
+      <path d="M 0,-50 Q 10,-60 20,-50 Q 10,-40 0,-50" fill="#d4af37" opacity="0.4"/>
+    </g>
+    
+    <!-- Inner details -->
+    <circle cx="0" cy="0" r="5" fill="#c1440e" opacity="0.6"/>
+    <circle cx="0" cy="-15" r="3" fill="#d4af37" opacity="0.5"/>
+    <circle cx="15" cy="0" r="3" fill="#d4af37" opacity="0.5"/>
+    <circle cx="0" cy="15" r="3" fill="#d4af37" opacity="0.5"/>
+    <circle cx="-15" cy="0" r="3" fill="#d4af37" opacity="0.5"/>
+  </g>
+</svg>

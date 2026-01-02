@@ -1,12 +1,637 @@
+@import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Noto+Serif+Display:ital,wght@0,100..900;1,100..900&display=swap');
+
 @import "tailwindcss";
-@plugin "daisyui";
+
+@plugin "daisyui" {
+    themes: luxury, cupcake;
+}
 
 @theme {
-    --font-serif: "Cormorant Garamond", serif;
+    --font-heritage: "Marcellus", serif;
+    --font-heading: "Noto Serif Display", serif;
+    --font-sans: "Plus Jakarta Sans", sans-serif;
+
+    /* Premium Javanese Color Palette */
+    --color-gold: #d4af37;
+    --color-gold-dark: #8b6e3d;
+    --color-gold-light: #f4e4c1;
+    --color-terracotta: #c1440e;
+    --color-terracotta-light: #e67e50;
+    --color-jade: #2d5016;
+    --color-jade-light: #5a8c3a;
+    --color-brown-deep: #3e2723;
+    --color-brown-warm: #5d4037;
+    --color-cream: #faf3e0;
 }
 
 @layer base {
     body {
-        @apply antialiased text-base-content bg-base-100;
+        @apply antialiased text-base-content bg-base-100 min-h-screen relative font-sans;
+        font-feature-settings: "kern" 1, "liga" 1;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: rgba(197, 160, 89, 0.1);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, var(--color-gold), var(--color-gold-dark));
+        border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--color-gold);
+    }
+
+    /* Sophisticated Batik Pattern Background */
+    .bg-batik {
+        position: relative;
+        background: linear-gradient(135deg,
+                oklch(var(--b1)) 0%,
+                oklch(from oklch(var(--b1)) calc(l * 0.98) c h) 100%);
+    }
+
+    .bg-batik::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+            radial-gradient(circle at 2px 2px, var(--color-gold) 0.8px, transparent 0),
+            radial-gradient(circle at 14px 14px, var(--color-gold-dark) 0.5px, transparent 0);
+        background-size: 28px 28px;
+        opacity: 0.12;
+        pointer-events: none;
+        z-index: 0;
+        animation: batikShift 60s linear infinite;
+    }
+
+    @keyframes batikShift {
+        0% {
+            background-position: 0 0, 14px 14px;
+        }
+
+        100% {
+            background-position: 28px 28px, 42px 42px;
+        }
+    }
+
+    .dark .bg-batik::before {
+        opacity: 0.06;
+        background-image:
+            radial-gradient(circle at 2px 2px, var(--color-gold-light) 0.8px, transparent 0),
+            radial-gradient(circle at 14px 14px, var(--color-gold) 0.5px, transparent 0);
+    }
+
+    /* Dark Theme Enhancements - RICH BUT CONTRASTED */
+    .dark .bg-batik {
+        background: radial-gradient(circle at 50% 50%, #16120e 0%, #0a0806 100%);
+    }
+
+    .dark .bg-batik::before {
+        opacity: 0.12;
+        background-image:
+            radial-gradient(circle at 2px 2px, #d4af37 0.8px, transparent 0),
+            radial-gradient(circle at 14px 14px, #c1440e 0.6px, transparent 0),
+            radial-gradient(circle at 24px 24px, #8b6e3d 0.5px, transparent 0);
+        background-size: 40px 40px;
+    }
+
+    /* Dark theme cards - STRONG CONTRAST */
+    .dark .card {
+        background: #3e2f26 !important;
+        border: 3px solid rgba(212, 175, 55, 0.3) !important;
+        box-shadow:
+            0 12px 40px rgba(0, 0, 0, 0.5),
+            0 6px 20px rgba(212, 175, 55, 0.15),
+            0 3px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .dark .card:hover {
+        border-color: rgba(212, 175, 55, 0.5) !important;
+        box-shadow:
+            0 18px 60px rgba(0, 0, 0, 0.6),
+            0 12px 30px rgba(212, 175, 55, 0.2),
+            0 6px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Dark theme inputs */
+    .dark input,
+    .dark select {
+        background: #1a1410 !important;
+        border: 3px solid #d4af37 !important;
+        color: #f5e6d3 !important;
+        font-weight: 500;
+    }
+
+    .dark input:focus,
+    .dark select:focus {
+        border-color: #c1440e !important;
+        box-shadow:
+            0 0 0 5px rgba(212, 175, 55, 0.25),
+            0 6px 20px rgba(193, 68, 14, 0.3);
+    }
+
+    /* Dark theme stats */
+    .dark .stats {
+        background: #3e2f26 !important;
+        border: 3px solid rgba(212, 175, 55, 0.3) !important;
+    }
+
+    /* Dark theme text - BRIGHT */
+    .dark h1,
+    .dark h2,
+    .dark h3,
+    .dark p,
+    .dark span {
+        color: #f5e6d3 !important;
+    }
+
+    /* Dark theme title */
+    .dark .heading-heritage {
+        color: #d4af37;
+        text-shadow:
+            0 3px 15px rgba(212, 175, 55, 0.6),
+            0 1px 3px rgba(193, 68, 14, 0.4),
+            0 6px 25px rgba(212, 175, 55, 0.3);
+    }
+
+    /* Light Theme Enhancements - RICH BUT CONTRASTED */
+    :root:not(.dark) .bg-batik {
+        background: radial-gradient(circle at 50% 50%, #fafafa 0%, #f4f1e8 100%);
+    }
+
+    :root:not(.dark) .bg-batik::before {
+        opacity: 0.15;
+        background-image:
+            radial-gradient(circle at 2px 2px, #c1440e 0.8px, transparent 0),
+            radial-gradient(circle at 14px 14px, #d4af37 0.6px, transparent 0),
+            radial-gradient(circle at 24px 24px, #8b6e3d 0.5px, transparent 0);
+        background-size: 40px 40px;
+    }
+
+    /* Light theme card enhancements - VERY DARK CARDS */
+    :root:not(.dark) .card {
+        background: #d4a574 !important;
+        border: 3px solid rgba(139, 110, 61, 0.4) !important;
+        box-shadow:
+            0 12px 40px rgba(0, 0, 0, 0.15),
+            0 6px 20px rgba(139, 110, 61, 0.2),
+            0 3px 8px rgba(0, 0, 0, 0.12);
+    }
+
+    :root:not(.dark) .card:hover {
+        border-color: rgba(139, 110, 61, 0.6) !important;
+        box-shadow:
+            0 18px 60px rgba(0, 0, 0, 0.2),
+            0 12px 30px rgba(139, 110, 61, 0.25),
+            0 6px 15px rgba(0, 0, 0, 0.18);
+    }
+
+    /* Make inputs VERY visible in light theme */
+    :root:not(.dark) input,
+    :root:not(.dark) select {
+        background: #ffffff !important;
+        border: 3px solid #c1440e !important;
+        color: #000000 !important;
+        font-weight: 500;
+    }
+
+    :root:not(.dark) input:focus,
+    :root:not(.dark) select:focus {
+        border-color: #8b6e3d !important;
+        box-shadow:
+            0 0 0 5px rgba(193, 68, 14, 0.25),
+            0 6px 20px rgba(212, 175, 55, 0.4);
+    }
+
+    /* Stats cards in light theme */
+    :root:not(.dark) .stats {
+        background: #d4a574 !important;
+        border: 3px solid rgba(139, 110, 61, 0.4) !important;
+    }
+
+    /* Text contrast - PURE BLACK */
+    :root:not(.dark) .base-content,
+    :root:not(.dark) h1,
+    :root:not(.dark) h2,
+    :root:not(.dark) h3,
+    :root:not(.dark) p,
+    :root:not(.dark) span,
+    :root:not(.dark) div {
+        color: #000000 !important;
+    }
+
+    /* Card text should be very dark */
+    :root:not(.dark) .card-body * {
+        color: #1a1410 !important;
+    }
+
+    /* Light theme - force all text to be dark */
+    :root:not(.dark) .label-text,
+    :root:not(.dark) .stat-title,
+    :root:not(.dark) .stat-desc,
+    :root:not(.dark) .card-title,
+    :root:not(.dark) label,
+    :root:not(.dark) .text-xs,
+    :root:not(.dark) .text-sm,
+    :root:not(.dark) p,
+    :root:not(.dark) span,
+    :root:not(.dark) .opacity-70,
+    :root:not(.dark) .opacity-60,
+    :root:not(.dark) .opacity-50,
+    :root:not(.dark) .opacity-40 {
+        color: #1a1410 !important;
+        opacity: 1 !important;
+    }
+
+    /* Force stat-title specifically in light mode even if it has color classes */
+    :root:not(.dark) .stat-title,
+    :root:not(.dark) .label-text,
+    :root:not(.dark) .stat-desc,
+    :root:not(.dark) .stat-value {
+        color: #1a1410 !important;
+        opacity: 1 !important;
+        font-weight: 600 !important;
+    }
+
+    /* Light mode - force formula text to be dark */
+    :root:not(.dark) .font-mono {
+        color: #1a1410 !important;
+        opacity: 0.9 !important;
+    }
+
+    .dark .stat-title,
+    .dark .label-text,
+    .dark .stat-desc {
+        color: #f5e6d3 !important;
+        opacity: 0.9 !important;
+    }
+
+    .dark .stat-value {
+        color: #ffffff !important;
+    }
+
+    /* Dark theme - force all text to be light */
+    .dark .label-text,
+    .dark .stat-title,
+    .dark .stat-desc,
+    .dark .card-title,
+    .dark label,
+    .dark .text-xs,
+    .dark .text-sm,
+    .dark .card-body *,
+    .dark .opacity-70,
+    .dark .opacity-60,
+    .dark .opacity-50,
+    .dark .opacity-40 {
+        color: #f5e6d3 !important;
+        opacity: 1 !important;
+    }
+
+    /* Primary and secondary colored text should remain colored */
+    :root:not(.dark) .text-primary {
+        color: #c1440e !important;
+    }
+
+    :root:not(.dark) .text-secondary {
+        color: #d4af37 !important;
+    }
+
+    .dark .text-primary {
+        color: #d4af37 !important;
+    }
+
+    .dark .text-secondary {
+        color: #c1440e !important;
+    }
+
+    /* Stat values should be prominent */
+    :root:not(.dark) .stat-value {
+        color: #1a1410 !important;
+    }
+
+    .dark .stat-value {
+        color: #f5e6d3 !important;
+    }
+
+    /* Fix primbon result card text in light theme */
+    :root:not(.dark) .glass-javanese * {
+        color: #1a1410 !important;
+    }
+
+    :root:not(.dark) .glass-javanese .text-white {
+        color: #1a1410 !important;
+    }
+
+    :root:not(.dark) .glass-javanese .opacity-60,
+    :root:not(.dark) .glass-javanese .opacity-50,
+    :root:not(.dark) .glass-javanese .opacity-70 {
+        opacity: 1 !important;
+    }
+
+    /* Dark theme primbon cards */
+    .dark .glass-javanese * {
+        color: #f5e6d3 !important;
+    }
+
+    .dark .glass-javanese .text-white {
+        color: #ffffff !important;
+    }
+
+    .dark .glass-javanese .text-warning {
+        color: #d4af37 !important;
+    }
+
+    /* Wayang Decorative Corner Elements */
+    .wayang-corner {
+        position: relative;
+    }
+
+    .wayang-corner::before,
+    .wayang-corner::after {
+        content: "";
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        background-image:
+            radial-gradient(circle at 50% 50%, var(--color-gold) 2px, transparent 2px),
+            conic-gradient(from 45deg at 50% 50%, transparent 0deg, var(--color-gold-dark) 90deg, transparent 180deg);
+        background-size: 8px 8px, 100% 100%;
+        opacity: 0.15;
+        pointer-events: none;
+    }
+
+    .wayang-corner::before {
+        top: -10px;
+        left: -10px;
+        border-top: 2px solid var(--color-gold);
+        border-left: 2px solid var(--color-gold);
+    }
+
+    .wayang-corner::after {
+        bottom: -10px;
+        right: -10px;
+        border-bottom: 2px solid var(--color-gold);
+        border-right: 2px solid var(--color-gold);
+    }
+
+    /* Enhanced Lontar Manuscript Style */
+    .card-lontar {
+        @apply bg-[#fdfaf5] text-[#3e2723] shadow-2xl;
+        position: relative;
+        overflow: hidden;
+        border-top: 4px solid var(--color-gold);
+        border-bottom: 4px solid var(--color-gold);
+        box-shadow:
+            0 10px 40px rgba(139, 110, 61, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.5),
+            inset 0 -1px 0 rgba(139, 110, 61, 0.2);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card-lontar:hover {
+        transform: translateY(-4px);
+        box-shadow:
+            0 20px 60px rgba(139, 110, 61, 0.25),
+            inset 0 1px 0 rgba(255, 255, 255, 0.6),
+            inset 0 -1px 0 rgba(139, 110, 61, 0.3);
+    }
+
+    .card-lontar::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+            linear-gradient(rgba(139, 110, 61, 0.03) 1.5px, transparent 1.5px),
+            repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(139, 110, 61, 0.01) 2px, rgba(139, 110, 61, 0.01) 4px);
+        background-size: 100% 1.8rem, 100% 100%;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .card-lontar::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(193, 68, 14, 0.05) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .dark .card-lontar {
+        @apply bg-[#1a1512] text-[#f4e4c1];
+        border-top-color: var(--color-gold-dark);
+        border-bottom-color: var(--color-gold-dark);
+        box-shadow:
+            0 10px 40px rgba(0, 0, 0, 0.5),
+            inset 0 1px 0 rgba(212, 175, 55, 0.1),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+    }
+
+    .dark .card-lontar:hover {
+        box-shadow:
+            0 20px 60px rgba(0, 0, 0, 0.7),
+            inset 0 1px 0 rgba(212, 175, 55, 0.15),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.6);
+    }
+
+    .dark .card-lontar::before {
+        background-image:
+            linear-gradient(rgba(244, 228, 193, 0.02) 1.5px, transparent 1.5px),
+            repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(244, 228, 193, 0.01) 2px, rgba(244, 228, 193, 0.01) 4px);
+    }
+
+    .dark .card-lontar::after {
+        background: radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(193, 68, 14, 0.03) 0%, transparent 50%);
+    }
+
+    /* Premium Text Shadows */
+    .text-shadow-gold {
+        text-shadow:
+            0 2px 10px rgba(212, 175, 55, 0.3),
+            0 0 30px rgba(212, 175, 55, 0.15),
+            0 4px 20px rgba(139, 110, 61, 0.2);
+    }
+
+    .text-shadow-subtle {
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Heritage Typography */
+    .heading-heritage {
+        @apply font-heritage tracking-[0.2em] uppercase;
+        font-variant: small-caps;
+        letter-spacing: 0.25em;
+    }
+
+    /* Light theme title enhancement */
+    :root:not(.dark) .heading-heritage {
+        color: #c1440e;
+        text-shadow:
+            0 3px 15px rgba(212, 175, 55, 0.5),
+            0 1px 3px rgba(193, 68, 14, 0.3),
+            0 6px 25px rgba(212, 175, 55, 0.25);
+    }
+
+    /* Premium Card Enhancements */
+    .card-premium {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card-premium::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.6s ease;
+    }
+
+    .card-premium:hover::before {
+        left: 100%;
+    }
+
+    .card-premium:hover {
+        transform: translateY(-2px);
+    }
+
+    /* Glassmorphism Effect */
+    .glass-javanese {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(12px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .dark .glass-javanese {
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Light theme glass effect - use solid background for better contrast */
+    :root:not(.dark) .glass-javanese {
+        background: rgba(212, 165, 116, 0.3) !important;
+        backdrop-filter: blur(8px);
+        border: 2px solid rgba(193, 68, 14, 0.2) !important;
+    }
+
+    /* Decorative Divider */
+    .divider-javanese {
+        position: relative;
+        height: 2px;
+        background: linear-gradient(90deg,
+                transparent 0%,
+                var(--color-gold) 20%,
+                var(--color-gold-dark) 50%,
+                var(--color-gold) 80%,
+                transparent 100%);
+        margin: 3rem auto;
+        max-width: 300px;
+    }
+
+    .divider-javanese::before,
+    .divider-javanese::after {
+        content: "◆";
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--color-gold);
+        font-size: 0.75rem;
+    }
+
+    .divider-javanese::before {
+        left: -20px;
+    }
+
+    .divider-javanese::after {
+        right: -20px;
+    }
+
+    /* Smooth Transitions */
+    * {
+        transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-duration: 200ms;
+    }
+
+    /* Input Enhancements */
+    input:focus,
+    select:focus,
+    textarea:focus {
+        outline: none;
+        box-shadow:
+            0 0 0 3px rgba(212, 175, 55, 0.1),
+            0 4px 12px rgba(212, 175, 55, 0.15);
+    }
+
+    /* Button Hover Effects */
+    .btn {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn:active {
+        transform: translateY(0);
+    }
+
+    /* Gunungan (Wayang Mountain) Decoration */
+    .gunungan-decoration {
+        filter: drop-shadow(0 4px 12px rgba(212, 175, 55, 0.3));
+        animation: gentleFloat 6s ease-in-out infinite;
+    }
+
+    @keyframes gentleFloat {
+
+        0%,
+        100% {
+            transform: translateY(0) rotate(0deg);
+        }
+
+        50% {
+            transform: translateY(-10px) rotate(1deg);
+        }
+    }
+
+    /* Stats Enhancement */
+    .stat {
+        transition: all 0.3s ease;
+    }
+
+    .stat:hover {
+        background: rgba(212, 175, 55, 0.05);
+    }
+
+    /* Premium Gradient Overlays */
+    .gradient-overlay-warm {
+        background: linear-gradient(135deg,
+                rgba(193, 68, 14, 0.1) 0%,
+                rgba(212, 175, 55, 0.1) 50%,
+                rgba(90, 140, 58, 0.1) 100%);
+    }
+
+    .gradient-overlay-gold {
+        background: linear-gradient(135deg,
+                rgba(212, 175, 55, 0.15) 0%,
+                rgba(139, 110, 61, 0.15) 100%);
     }
 }
