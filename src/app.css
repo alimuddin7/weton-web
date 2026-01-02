@@ -1,0 +1,12 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+@theme {
+    --font-serif: "Cormorant Garamond", serif;
+}
+
+@layer base {
+    body {
+        @apply antialiased text-base-content bg-base-100;
+    }
+}
