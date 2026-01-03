@@ -37,6 +37,21 @@
 </svelte:head>
 
 <div data-theme={theme} class="min-h-screen transition-colors duration-300">
+	<div class="fixed top-4 left-4 z-50 flex gap-2">
+		<a
+			href="/"
+			class="btn btn-sm btn-ghost bg-base-200/80 backdrop-blur-md shadow-xl border border-primary/20 hover:border-primary/50 transition-all rounded-full px-4"
+		>
+			<span class="text-xs tracking-widest uppercase">Weton</span>
+		</a>
+		<a
+			href="/abajadun"
+			class="btn btn-sm btn-ghost bg-base-200/80 backdrop-blur-md shadow-xl border border-secondary/20 hover:border-secondary/50 transition-all rounded-full px-4"
+		>
+			<span class="text-xs tracking-widest uppercase">Abajadun</span>
+		</a>
+	</div>
+
 	<div class="fixed top-4 right-4 z-50">
 		<button
 			class="btn btn-circle btn-ghost bg-base-200/80 backdrop-blur-md shadow-2xl border-2 border-primary/30 hover:border-primary/50 hover:scale-110 transition-all duration-300"
